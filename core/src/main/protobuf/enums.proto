@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package com.tp.game.quiz.idl;
+
+option optimize_for = SPEED;
+
+enum Result {
+    FAIL           = 0;
+    SUCCESS        = 1;
+}
+
+enum MatchFailMsg {
+    MATCH_FAIL_UNKNOWN   = 0;  // 正常匹配
+    MATCH_FAIL_NO_USER   = 1;  // 无用户
+    MATCH_FAIL_TIMEOUT   = 2;  // 等待超时
+    MATCH_FAIL_IS_BROKEN = 3;  // 用户断线或退出
+}
