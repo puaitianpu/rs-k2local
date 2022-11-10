@@ -26,6 +26,30 @@ lazy val test = project
   .in(file("test"))
   .dependsOn(core)
 
+val akkaVersion         = "2.7.0"
+val akkaHttpVersion     = "10.4.0"
+val alpakkaKafkaVersion = "4.0.0"
+val catsVersion         = "2.8.0"
+val prometheusVersion   = "0.16.0"
+val slickVersion        = "3.4.1"
+val scalaCsvVersion     = "1.3.10"
+
+libraryDependencies ++= Seq(
+  "com.typesafe.akka"    %% "akka-actor-typed"    % akkaVersion,
+  "com.typesafe.akka"    %% "akka-stream"         % akkaVersion,
+  "com.typesafe.akka"    %% "akka-http"           % akkaHttpVersion,
+  "com.typesafe.akka"    %% "akka-stream-kafka"   % alpakkaKafkaVersion,
+  "org.typelevel"        %% "cats-core"           % catsVersion,
+  "org.typelevel"        %% "cats-free"           % catsVersion,
+  "io.prometheus"        % "simpleclient"         % prometheusVersion,
+  "io.prometheus"        % "simpleclient_hotspot" % prometheusVersion,
+  "io.prometheus"        % "simpleclient_common"  % prometheusVersion,
+  "com.typesafe.slick"   %% "slick"               % slickVersion,
+  "org.slf4j"            % "slf4j-nop"            % "1.7.26",
+  "com.typesafe.slick"   %% "slick-hikaricp"      % slickVersion,
+  "com.github.tototoshi" %% "scala-csv"           % scalaCsvVersion
+)
+
 lazy val wartRemoverSettings = Seq(
   wartremoverWarnings ++= Warts.allBut(Wart.Equals)
 )
