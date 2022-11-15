@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package com.tp.rs.k2local.idl;
+
+option optimize_for = SPEED;
+
+import "enums.proto";
+
+message AdxEvent {
+    int64            timestamp0                 = 1;    // Publisher 请求时间戳，由 ADX Server 在收到请求时打下
+    int64            timestamp                  = 2;    // 事件发生时间戳，由 ADX Server 在收到事件上报时打下
+    string           request_id                 = 3;    // req_id
+    EventType        event_type                 = 4;    // 事件类型
+    ValidType        valid                      = 5;    // 有效性
+    string           api_version                = 6;    // API 版本号
+    Carrier          carrier                    = 7;    // 运营商，原 tMobile
+    string           mcc                        = 8;    // 运营商代号
+    string           ip                         = 9;    // 客户端 IP
+    double           longitude                  = 10;   // 地理位置之经度
+    double           latitude                   = 11;   // 地理位置之纬度
+    string           device_model               = 12;   // 机型，原 machType
+    OSType           os_type                    = 13;   // 操作系统类型
+    ConnectionType   connection_type            = 14;   // 网络类型，原 coonType
+    string           idfa                       = 15;   // IDFA, for iOS ONLY
+    string           imei                       = 16;   // IMEI, for Android ONLY
+    string           imsi                       = 17;   // IMSI
+    string           mac                        = 18;   // MAC
+    string           android_id                 = 19;   // Android ID, for Android ONLY
+    string           google_ad_id               = 20;   // Google’s advertising ID, for Android ONLY
+    string           device_id                  = 21;   // Android: IMEI, Apple: idfa
+    string           ua                         = 22;   // User Agent
+    AdType           ad_type                    = 23;   // 广告类型
+    int64            pub_app_ad_id              = 24;   // 开发者广告位 ID
+    string           pub_app_ad_key             = 25;   // 开发者广告位 key
+    int64            pub_app_id                 = 26;   // 开发者应用 ID
+    string           pub_app_key                = 27;   // 开发者应用 key
+    int64            pub_id                     = 28;   // 开发者 ID
+    Bool             is_ag_app                  = 29;   // 是否爱告应用
+    int64            dsp_app_id                 = 30;   // 广告源应用 ID
+    int64            dsp_id                     = 31;   // 广告源 ID
+    int64            dsp_code                   = 32;   // 广告源编码
+    string           dsp_name                   = 33;   // 广告源名
+    BiddingType      dsp_bidding_type           = 34;   // 竞价类型，RTB or PDB
+    PubApiType       pub_api_type               = 35;   // Publisher API Type, S2S or CSS
+    DspApiType       dsp_api_type               = 36;   // DSP 是 C2S OR S2S
+    DealType         deal_type                  = 37;   // 交易类型, 涉及计费
+    double           ecpm                       = 38;   // 价格(ECPM, 预估值)
+    double           deal_price                 = 39;   // 成交价格，实时竞价类交易，据此计费
+    double           amount                     = 40;   // ADX 收益
+    CreativeType     ad_creative_type           = 41;   // 广告创意类型
+    InteractionType  ad_interaction_type        = 42;   // 广告交互类型
+    string           ad_title                   = 43;   // 广告标题(如果有的话)
+    string           ad_package_name            = 44;   // 广告的包名(如果有的话)
+    int32            impression_type            = 45;   // 标记为一类展示还是二类展示
+    int64            imp_expire_at              = 46;   // 展示过期时间
+    int64            click_expire_at            = 47;   // 点击过期时间
+    string           ad_img_url                 = 48;   // 创意类型为纯图时，图片的地址
+    string           ad_icon_url                = 49;   // 创意类型为图文时，图片的地址
+    string           ad_deeplink_url            = 50;   // deeplink地址
+    string           ad_target_url              = 51;   // 跳转地址
+    string           ad_download_url            = 52;   // 下载地址
+    string           ad_redirect_download_url   = 53;   //  二次下载的真实地址
+    string           ad_html                    = 54;   // html代码块
+    UseType          use_type                   = 55;   // dsp_app.use_type, 0(默认);1(自用);2(外放)
+    DropType         drop_type                  = 56;   // S丢弃
+    Bool             is_video_ad                = 57;   // 是否视频广告
+    Bool             has_matched_video          = 58;   // 是否匹配上视频广告
+    string           channel_id                 = 59;   // 渠道号
+    string           sub_channel_id             = 60;   // 子渠道号
+    string           mid                        = 61;   //
+    string           sdk_version                = 62;   // sdk版本号
+    int32            ad_group_id                = 63;   // 广告组id
+    int32            ad_width                   = 64;   // 下发图片宽度
+    int32            ad_height                  = 65;   // 下发图片高度
+    string           client_ip                  = 66;   // 客户端请求广告时通过第三方获取的广告
+    int32            img_real_width             = 67;   // 客户端上报展示图片真实宽度
+    int32            img_real_height            = 68;   // 客户端上报展示图片真实高度
+    int32            placement_width            = 69;   // 客户端上报广告位宽度
+    int32            placement_height           = 70;   // 客户端上报广告位高端
+}

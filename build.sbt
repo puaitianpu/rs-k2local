@@ -19,6 +19,7 @@ lazy val core = project
   .enablePlugins(JavaAppPackaging) // 启用 Java 应用程序原型插件，包含以下特性: 1. 默认应用程序映射(无 fat jar) 2. 可执行的 bash/bat 脚本
   .enablePlugins(UniversalPlugin) // 启用通用插件
   .enablePlugins(JavaAgent) // 启用 Java 代理插件
+  .settings(coreDependencies)
   .settings(packagerSettings)
 // .settings(wartRemoverSettings)
 
@@ -33,21 +34,27 @@ val catsVersion         = "2.8.0"
 val prometheusVersion   = "0.16.0"
 val slickVersion        = "3.4.1"
 val scalaCsvVersion     = "1.3.10"
+val scalaLoggerVersion  = "3.9.4"
+val pureconfigVersion   = "0.17.2"
 
-libraryDependencies ++= Seq(
-  "com.typesafe.akka"    %% "akka-actor-typed"    % akkaVersion,
-  "com.typesafe.akka"    %% "akka-stream"         % akkaVersion,
-  "com.typesafe.akka"    %% "akka-http"           % akkaHttpVersion,
-  "com.typesafe.akka"    %% "akka-stream-kafka"   % alpakkaKafkaVersion,
-  "org.typelevel"        %% "cats-core"           % catsVersion,
-  "org.typelevel"        %% "cats-free"           % catsVersion,
-  "io.prometheus"        % "simpleclient"         % prometheusVersion,
-  "io.prometheus"        % "simpleclient_hotspot" % prometheusVersion,
-  "io.prometheus"        % "simpleclient_common"  % prometheusVersion,
-  "com.typesafe.slick"   %% "slick"               % slickVersion,
-  "org.slf4j"            % "slf4j-nop"            % "1.7.26",
-  "com.typesafe.slick"   %% "slick-hikaricp"      % slickVersion,
-  "com.github.tototoshi" %% "scala-csv"           % scalaCsvVersion
+lazy val coreDependencies = libraryDependencies ++= Seq(
+  "com.typesafe.akka"                  %% "akka-actor-typed"                        % akkaVersion,
+  "com.typesafe.akka"                  %% "akka-stream"                             % akkaVersion,
+  "com.typesafe.akka"                  %% "akka-http"                               % akkaHttpVersion,
+  "com.typesafe.akka"                  %% "akka-stream-kafka"                       % alpakkaKafkaVersion,
+  "org.typelevel"                      %% "cats-core"                               % catsVersion,
+  "org.typelevel"                      %% "cats-free"                               % catsVersion,
+  "io.prometheus"                      % "simpleclient"                             % prometheusVersion,
+  "io.prometheus"                      % "simpleclient_hotspot"                     % prometheusVersion,
+  "io.prometheus"                      % "simpleclient_common"                      % prometheusVersion,
+  "com.typesafe.slick"                 %% "slick"                                   % slickVersion,
+  "org.slf4j"                          % "slf4j-nop"                                % "1.7.26",
+  "com.typesafe.scala-logging"         %% "scala-logging"                           % scalaLoggerVersion,
+  "com.typesafe.slick"                 %% "slick-hikaricp"                          % slickVersion,
+  "com.github.tototoshi"               %% "scala-csv"                               % scalaCsvVersion,
+  "com.github.pureconfig"              %% "pureconfig"                              % pureconfigVersion,
+  "com.thesamet.scalapb.common-protos" %% "proto-google-common-protos-scalapb_0.11" % "2.9.6-0" % "protobuf",
+  "com.thesamet.scalapb.common-protos" %% "proto-google-common-protos-scalapb_0.11" % "2.9.6-0"
 )
 
 lazy val wartRemoverSettings = Seq(
@@ -115,6 +122,16 @@ addCommandAlias("pkg", ";core/universal:packageZipTarball")
 ThisBuild / Compile / doc / sources := List()
 ThisBuild / packageDoc / publishArtifact := false
 ThisBuild / packageSrc / publishArtifact := true
+
+PB.protocVersion := "-v3.11.4"
+
+Compile / PB.targets := Seq(
+  scalapb.gen(
+    flatPackage = true,
+    javaConversions = false,
+    grpc = false,
+  ) -> (Compile / sourceManaged).value / "protobuf"
+)
 
 lazy val packagerSettings = Seq(Universal / mappings += baseDirectory.value / "deploy/app.sh" -> "app.sh") ++
   Option(System.getProperty("conf")).toList.map { conf =>

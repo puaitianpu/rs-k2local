@@ -4,7 +4,198 @@ package com.tp.rs.k2local.idl;
 
 option optimize_for = SPEED;
 
+enum CsvLoadStatus {
+    NEW         = 0;            //新建的
+    LOADING     = 1;            //加载中
+    LOADED      = 2;            //加载完成
+    DELETED     = 3;            //CSV文件被删除
+}
+
+// 事件类型
+enum EventType {
+    UNKNOWN_EVENT_TYPE          = 0;  // 什么鬼?
+    PUBLISHER_REQUEST           = 1;  // 应用请求(REQT)
+    BID_REQUEST                 = 2;  // 广告源请求(REQT2)
+    NO_BID                      = 3;  // 广告源未返回(EMPTY)
+    BID_TIMEOUT                 = 4;  // 广告源请求超时(TIMEOUT)
+    NOT_ISSUED                  = 5;  // 未下发(NQUERY)
+    ISSUED                      = 6;  // 下发(QUERY)
+    IMPRESSION                  = 7;  // 展示(SHOW)
+    IMPRESSION2                 = 8;  // 二类展示(SHOW2)
+    CLICK                       = 9;  // 点击(CLICK)
+    DOWNLOAD_START              = 10; // 开始下载(DOWN)
+    DOWNLOAD_COMPLETED          = 11; // 下载成功(DOWNS)
+    INSTALL_START               = 12; // 开始安装(INSTL)
+    INSTALL_COMPLETED           = 13; // 安装成功(INSLS)
+    APP_OPEN                    = 14; // 打开(OPEN)
+    APP_ACTIVATED               = 15; // 激活(?)
+    CSS_REQUEST_1               = 16; // CSS 请求，第一次上行(CSSREQT)
+    CSS_ISSUED_1                = 17; // CSS 返回配置，第一次下行(C2SQUE)
+    CSS_SDK_REQUEST             = 18; // C2S SDK 向 DSP 请求广告(C2SREQ)
+    CSS_SDK_ISSUED              = 19; // C2S SDK 获得 DSP 返回的广告(C2SQUAD)
+    CSS_SDK_FAILED              = 20; // C2S SDK 向 DSP 请求广告失败，如：网络失败、超时、dsp服务器拒绝链接等(C2SREQF)
+    CSS_REQUEST_2               = 21; // C2S 解析广告请求, 第二次上行(?)
+    CSS_PARSE_START             = 22; // C2S 解析广告(C2SANA)
+    CSS_PARSE_SUCCESS           = 23; // C2S 解析广告(C2SANAS)
+    CSS_ISSUED_2                = 24; // CSS 下发，第二次下行(CSSQUERY)
+    C2S_REQUEST_2               = 25; // C2S 二类请求
+    SDK_PRE_DOWNLOAD_START      = 26; // SDK 二次下载预请求开始
+    SDK_PRE_DOWNLOAD_COMPLETED  = 27; // SDK 二次下载预请求完成
+    SDK_PRE_DOWNLOAD_FAILED     = 28; // SDK 开始二次下载预请求失败
+    PRE_DOWNLOAD_PARSE_REQUEST  = 29; // 二次下载解析请求
+    PRE_DOWNLOAD_SUCCESS        = 30; // 二次下载解析成功
+    PRE_DOWNLOAD_FAILED         = 31; // 二次下载解析失败
+    PRE_DOWNLOAD_PARSE_RESPONSE = 32; // 二次下载解析响应
+    DROP                        = 33; // S丢弃
+    ACTIVE2                     = 34; // 提升活跃(ACTIVE2)
+}
+
+// 消息有效性
+enum ValidType {
+    ZERO               = 0;  // 正常
+    PRECESSED          = 1;  // 已处理
+    DUPLICATED         = 3;  // 重复请求/上报
+    EXPIRED            = 5;  // 过期
+    IMPRESSION_EXPIRED = 7;  // 因为展示过期而判定失效
+    NO_IMPRESSION      = 9;  // 没有展示
+    IMEI_BANNED        = 11; // IMEI 被禁
+    IP_BANNED          = 13; // IP 被禁
+    UA_BANNED          = 15; // UA 被禁
+    IMSI_BANNED        = 17; // IMSI 被禁
+    UNKNOWN_ERROR      = 99; // 其他异常
+}
+
+// 客户端运营商
+enum Carrier {
+    UNKNOWN_CARRIER = 0; // 什么鬼
+    CHINA_MOBILE    = 1; // 中国移动
+    CHINA_UNICOM    = 2; // 中国联通
+    CHINA_TELECOM   = 3; // 中国电信
+    NATIONAL_RADIO_AND_TELEVISION_NETWORK_COMPANY = 4; // 中国广播电视网络有限公司
+}
+
+// 客户端操作系统类型
+enum OSType {
+    UNKNOWN_OS = 0;
+    ANDROID    = 1;
+    IOS        = 2;
+    WINDOWS    = 3;
+    BB         = 4;
+}
+
+// 客户端网络连接类型
+enum ConnectionType {
+    UNKNOWN_CONNECTION_TYPE             = 0;
+    ETHERNET                            = 1;
+    WIFI                                = 2;
+    CELLULAR_NETWORK_UNKNOWN_GENERATION = 3;
+    CELLULAR_NETWORK_2G                 = 4;
+    CELLULAR_NETWORK_3G                 = 5;
+    CELLULAR_NETWORK_4G                 = 6;
+}
+
+// 广告类型
+enum AdType {
+    UNKNOWN_AD_TYPE = 0;  // 未知类型
+    BANNER          = 1;  // 横幅
+    INTERSTITIAL    = 2;  // 插页
+    SPLASH          = 3;  // 开屏
+    NATIVE          = 4;  // 信息流, 原生广告
+}
+
+// 竞价方式
+enum BiddingType {
+    UNKNOWN_DSP_BIDDING_TYPE = 0; // 什么鬼？
+    PDB                      = 1; // 直接购买，用于目前除 RTB 之外的所有 DSP (at 2017-09-23 Saturday)
+    PPB                      = 3; // 暂时不启用
+    RTB                      = 5; // 实时竞价
+    PMP                      = 7; // 暂时不启用
+}
+
+// DSP 接入方式
+enum DspApiType {
+    UNKNOWN_DSP_API_TYPE = 0; // 什么鬼
+    S2S                  = 1;
+    C2S                  = 2;
+}
+
+// Publisher 接入方式
+enum PubApiType {
+    UNKNOWN_PUB_API_TYPE = 0; // 什么鬼
+    ZM                = 1;
+    CSS               = 2;
+}
+
+// 交易类型
+enum DealType {
+    NONE_DEAL_TYPE= 0;    // 无
+    CPM           = 1;    // 按展示算
+    CPC           = 3;    // 按点击
+    CPD           = 5;    // 按下载
+}
+
+
+// 广告创意类型
+enum CreativeType {
+    NONE_CREATIVE_TYPE = 0; // 无类型
+    TEXT               = 1; // 文字,取 title
+    IMAGE              = 2; // 图片,取 imgUrl
+    IMAGE_TEXT         = 3; // 图文,取 iconUrl 和 title
+    VIDEO              = 4; // 视频
+    HTML               = 5; // html,取 html
+    URL                = 6; // 只有 URL
+}
+
+// 广告交互类型
+enum InteractionType {
+    NO_INTERACTION = 0; // 无动作
+    SURFING        = 1; // 浏览器打开 优先看 deeplink 能否打开, 再用 target_url
+    IN_APP         = 2; // 应用内打开 优先看 deeplink 能否打开, 再用 target_url
+    DOWNLOAD       = 3; // 下载应用, 取值 download_url
+    DIALING        = 4; // 打电话
+    SMS            = 5; // 发短信
+    EMAIL          = 6; // 发邮件
+    REDIRECT_DOWNLOAD = 7; //二次下载应用
+}
+
+//广告源应用类型
+enum UseType {
+    UNKNOWN_USE_TYPE   = 0 ;
+    SELF               = 1;  // 自用
+    OTHER              = 2;  // 外放
+}
+
+//S丢弃类型
+enum DropType {
+    UNKNOWN                     = 0;  //未知类型
+    DSP_BID_LOSE                = 1;  //竞价失败，导致广告未下发
+    DSP_UNDER_BID_FLOOR         = 2;  //低于底价
+    DSP_PARSE_ERROR             = 3;  //解析错误
+    DSP_NO_IMG_URL              = 4;  //DSP未下发“imgUrl”
+    DSP_NO_HTML                 = 5;  //DSP未下发“HTML”
+    DSP_NO_DOWNLOAD_URL         = 6;  //DSP未下发“downloadUrl”
+    DSP_NO_TARGET_URL           = 7;  //DSP未下发“targetUrl”
+    PUB_UNSUPPORT_SURFING       = 8;  //开发者不不支持浏览器跳转广告
+    PUB_UNSUPPORT_DOWNLOAD      = 9;  //开发者不支持APK(下载)类型广告
+    PUB_UNSUPPORT_IN_APP        = 10; //开发者不支持应用内跳转广告
+    PUB_UNSUPPORT_DEEPLINK      = 11; //开发者不支持Deeplink广告
+    PUB_UNSUPPORT_PRE_DOWNLOAD  = 12; //开发者不支持二次下请求下载类广告
+    PUB_UNSUPPORT_TEXT          = 13; //开发者不支持纯文字广告
+    PUB_UNSUPPORT_IMAGE         = 14; //开发者不支持纯图广告
+    PUB_UNSUPPORT_IMAGE_TEXT    = 15; //开发者不支持图文广告
+    PUB_UNSUPPORT_HTML          = 16; //开发者不支持HTML广告
+    DSP_IMP2_NOT_ISSUED         = 17;  //二类展示未下发
+}
+
 enum Result {
     FAIL           = 0;
     SUCCESS        = 1;
 }
+
+enum Bool {
+    False        = 0;
+    True         = 1;
+}
+
+
+

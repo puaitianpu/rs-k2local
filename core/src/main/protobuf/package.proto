@@ -1,0 +1,11 @@
+option optimize_for = SPEED;
+
+package com.tp.rs.k2local.idl;
+
+import "scalapb/scalapb.proto";
+
+option (scalapb.options) = {
+  scope: PACKAGE
+  // collection_type: "Vector"
+  preserve_unknown_fields: false
+};

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.tp.rs.k2local.idl;
+
+option optimize_for = SPEED;
+
+import "enums.proto";
+
+message EventCsvData {
+    int64           id                      = 11;        //id
+    string          filename                = 12;        //文件名称
+    string          filepath                = 13;        //文件路径
+    int32           file_lines              = 14;        //数据条数
+    int64           offsets                 = 15;        // 偏移量
+    CsvLoadStatus   status                  = 21;        //状态
+    int64           created_at              = 31;        //添加时间搓
+    int64           loaded_at               = 32;        //加载完成时间搓
+}
